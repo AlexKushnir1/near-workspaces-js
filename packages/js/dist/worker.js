@@ -17,6 +17,8 @@ const API_KEY_HEADER = 'x-api-key';
  * The main interface to near-workspaces. Create a new worker instance with {@link Worker.init}, then run code on it.
  */
 class Worker {
+    config;
+    manager;
     constructor(config) {
         (0, internal_utils_1.debug)('Lifecycle.Worker.constructor', 'config:', config);
         this.config = config;
@@ -37,9 +39,8 @@ class Worker {
      * @returns an instance of the Worker class
      */
     static async init(config = {}) {
-        var _a;
         (0, internal_utils_1.debug)('Lifecycle.Worker.init()', 'config:', config);
-        switch ((_a = config.network) !== null && _a !== void 0 ? _a : (0, utils_1.getNetworkFromEnv)()) {
+        switch (config.network ?? (0, utils_1.getNetworkFromEnv)()) {
             case 'testnet':
                 return TestnetWorker.init(config);
             case 'sandbox':
@@ -59,10 +60,7 @@ exports.Worker = Worker;
 // Connect to a custom network.
 // Note: the burden of ensuring the methods that are able to be called are left up to the user.
 class CustomnetWorker extends Worker {
-    constructor() {
-        super(...arguments);
-        this.clientConfig = (0, utils_1.urlConfigFromNetwork)({ network: 'custom', rpcAddr: this.config.rpcAddr });
-    }
+    clientConfig = (0, utils_1.urlConfigFromNetwork)({ network: 'custom', rpcAddr: this.config.rpcAddr });
     static async init(config) {
         (0, internal_utils_1.debug)('Lifecycle.CustomnetWorker.create()', 'config:', config);
         const fullConfig = {
@@ -70,7 +68,7 @@ class CustomnetWorker extends Worker {
             port: 3030,
             rm: false,
             refDir: null,
-            ...(0, utils_1.urlConfigFromNetwork)({ network: 'custom', rpcAddr: config.rpcAddr }),
+            ...(0, utils_1.urlConfigFromNetwork)({ network: 'custom', rpcAddr: config.rpcAddr }), // Copied over, can't access member clientConfig here
             ...config,
         };
         const worker = new CustomnetWorker(fullConfig);
@@ -135,6 +133,7 @@ class TestnetWorker extends Worker {
 }
 exports.TestnetWorker = TestnetWorker;
 class SandboxWorker extends Worker {
+    server;
     static async init(config) {
         (0, internal_utils_1.debug)('Lifecycle.SandboxWorker.create()', 'config:', config);
         const syncFilename = server_1.SandboxServer.lockfilePath('near-sandbox-worker-sync.txt');
@@ -196,7 +195,7 @@ class SandboxWorker extends Worker {
         return {
             network: 'sandbox',
             rootAccountId: 'test.near',
-            rpcAddr: '',
+            rpcAddr: '', // Will be over written
             initialBalance: near_units_1.NEAR.parse('100 N').toJSON(),
         };
     }
