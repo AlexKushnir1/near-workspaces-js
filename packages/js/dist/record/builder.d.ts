@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { Buffer } from 'buffer';
 import { KeyPair, NamedAccount, PublicKey } from '../types';
 import { AccessKeyData, Account, AccountData, StateRecord } from './types';

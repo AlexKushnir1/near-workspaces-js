@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { ChildProcess } from 'child_process';
 import _BN from 'bn.js';
 import { KeyPair } from 'near-api-js';

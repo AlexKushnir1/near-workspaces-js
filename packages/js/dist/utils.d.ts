@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { Buffer } from 'buffer';
 import { Gas, NEAR } from 'near-units';
 import { NamedAccount, KeyPair, ClientConfig, KeyStore, BN } from './types';

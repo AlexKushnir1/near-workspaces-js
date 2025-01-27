@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { Buffer } from 'buffer';
 import { Records } from './record';
 import { JSONRpc, AccountView, NearProtocolConfig, AccountBalance, CodeResult, BlockId, Finality, StateItem, Empty, PublicKey, Network, AccessKeyView, AccessKeyList } from './types';
